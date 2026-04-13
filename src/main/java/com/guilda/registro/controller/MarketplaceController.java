@@ -1,11 +1,14 @@
 package com.guilda.registro.controller;
 
-import co.elastic.clients.elasticsearch.core.SearchResponse;
+import com.guilda.registro.dto.FaixaPrecoDTO;
+import com.guilda.registro.dto.PrecoMedioDTO;
 import com.guilda.registro.dto.ProdutoDTO;
+import com.guilda.registro.dto.TermoContagemDTO;
 import com.guilda.registro.service.MarketplaceService;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -52,8 +55,8 @@ public class MarketplaceController {
 
     @GetMapping("/busca/faixa-preco")
     public List<ProdutoDTO> buscaFaixaPreco(
-            @RequestParam Double min,
-            @RequestParam Double max) throws IOException {
+            @RequestParam BigDecimal min,
+            @RequestParam BigDecimal max) throws IOException {
         return service.buscaFaixaPreco(min, max);
     }
 
@@ -61,28 +64,28 @@ public class MarketplaceController {
     public List<ProdutoDTO> buscaAvancada(
             @RequestParam String categoria,
             @RequestParam String raridade,
-            @RequestParam Double min,
-            @RequestParam Double max) throws IOException {
+            @RequestParam BigDecimal min,
+            @RequestParam BigDecimal max) throws IOException {
         return service.buscaAvancada(categoria, raridade, min, max);
     }
 
     @GetMapping("/agregacoes/por-categoria")
-    public SearchResponse<Void> agregarPorCategoria() throws IOException {
+    public List<TermoContagemDTO> agregarPorCategoria() throws IOException {
         return service.agregarPorCategoria();
     }
 
     @GetMapping("/agregacoes/por-raridade")
-    public SearchResponse<Void> agregarPorRaridade() throws IOException {
+    public List<TermoContagemDTO> agregarPorRaridade() throws IOException {
         return service.agregarPorRaridade();
     }
 
     @GetMapping("/agregacoes/preco-medio")
-    public SearchResponse<Void> agregarPrecoMedio() throws IOException {
+    public PrecoMedioDTO agregarPrecoMedio() throws IOException {
         return service.agregarPrecoMedio();
     }
 
     @GetMapping("/agregacoes/faixas-preco")
-    public SearchResponse<Void> agregarFaixasPreco() throws IOException {
+    public List<FaixaPrecoDTO> agregarFaixasPreco() throws IOException {
         return service.agregarFaixasPreco();
     }
 }

@@ -1,8 +1,13 @@
 package com.guilda.registro.controller;
 
+import com.guilda.registro.dto.AventureiroCreateRequest;
+import com.guilda.registro.dto.AventureiroDetalhadoResponse;
+import com.guilda.registro.dto.AventureiroRequest;
 import com.guilda.registro.dto.AventureiroResumoResponse;
 import com.guilda.registro.domain.enums.ClasseAventureiro;
+import com.guilda.registro.dto.CompanheiroRequest;
 import com.guilda.registro.service.AventureiroService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -44,5 +49,42 @@ public class AventureiroController {
         Page<AventureiroResumoResponse> response = service.buscarPorNome(nome, pageable);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AventureiroDetalhadoResponse> buscarDetalhado(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarDetalhado(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<AventureiroDetalhadoResponse> criar(@Valid @RequestBody AventureiroCreateRequest request) {
+        return ResponseEntity.ok(service.criar(request));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AventureiroDetalhadoResponse> atualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody AventureiroRequest request
+    ) {
+        return ResponseEntity.ok(service.atualizar(id, request));
+    }
+
+    @PostMapping("/{id}/recrutar")
+    public ResponseEntity<AventureiroDetalhadoResponse> recrutar(@PathVariable Long id) {
+        return ResponseEntity.ok(service.recrutar(id));
+    }
+
+    @PostMapping("/{id}/companheiro")
+    public ResponseEntity<AventureiroDetalhadoResponse> adicionarCompanheiro(
+            @PathVariable Long id,
+            @Valid @RequestBody CompanheiroRequest request
+    ) {
+        return ResponseEntity.ok(service.adicionarCompanheiro(id, request));
+    }
+
+    @DeleteMapping("/{id}/companheiro")
+    public ResponseEntity<Void> removerCompanheiro(@PathVariable Long id) {
+        service.removerCompanheiro(id);
+        return ResponseEntity.noContent().build();
     }
 }

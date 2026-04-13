@@ -2,6 +2,7 @@ package com.guilda.registro.controller;
 
 import com.guilda.registro.domain.enums.NivelPerigo;
 import com.guilda.registro.domain.enums.StatusMissao;
+import com.guilda.registro.dto.MissaoCreateRequest;
 import com.guilda.registro.dto.MissaoDetalhadaResponse;
 import com.guilda.registro.repository.MissaoRepository;
 import com.guilda.registro.service.MissaoService;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.time.OffsetDateTime;
 
@@ -49,5 +51,22 @@ public class MissaoController {
             @RequestParam(defaultValue = "10") int size) {
 
         return ResponseEntity.ok(service.gerarRelatorioMetricas(inicio, termino, PageRequest.of(page, size)));
+    }
+
+    @PostMapping
+    public ResponseEntity<MissaoDetalhadaResponse> criar(@Valid @RequestBody MissaoCreateRequest request) {
+        return ResponseEntity.ok(service.criar(request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        service.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{missaoId}/participacoes/{aventureiroId}")
+    public ResponseEntity<Void> removerParticipacao(@PathVariable Long missaoId, @PathVariable Long aventureiroId) {
+        service.removerParticipacao(missaoId, aventureiroId);
+        return ResponseEntity.noContent().build();
     }
 }
